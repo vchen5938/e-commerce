@@ -19,9 +19,13 @@ Route::resource('orders', 'OrderController');
 Route::resource('users', 'UserController');
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'MyController@index');
+
+Route::get('createsession', 'MyController@createsession');
+Route::get('getsession', 'MyController@getsession');
+Route::get('delsession', 'MyController@delsession');
+Route::get('flashdata', 'MyController@flashData');
+
 
 Route::get('/test/{item}', 'ItemController@destroy');
 Route::get('additem/{cgy}/{item}', 'CgyController@addItem');
@@ -34,9 +38,20 @@ Route::get('/item/mutator/{item}', 'ItemController@testMutator');
 Route::get('/item/sell/{item}', 'ItemController@sell_at');
 Route::get('/item/cast/{item}', 'ItemController@testCast');
 
+Route::get('/who', 'HomeController@who');
+Route::get('/auth', 'HomeController@authlogin');
+Route::get('/logout', 'HomeController@authlogout');
+Route::get('/store', 'HomeController@storePage');
+
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
 
 
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
