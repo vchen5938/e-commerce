@@ -32,7 +32,7 @@
 
 </head>
 
-<body class="stretched modal-subscribe-bottom dark">
+<body class="stretched modal-subscribe-bottom">
 
 	<!-- Document Wrapper
 	============================================= -->
@@ -93,19 +93,45 @@
 							<!-- Top Login
 							============================================= -->
 							<div id="top-account" class="px-4">
-								<a href="#modal-register" data-lightbox="inline">Sign up/Login</a>
+                                @if (!Auth::check())
+                                    <a href="#modal-register" data-lightbox="inline">Sign up/Login</a>
+                                @else
+                                <a href="#" >Hey {{ Auth::user()->name}}!</a>
+                                @endif
+                                
+								
 							</div><!-- #top-search end -->
 
 							<!-- Top Cart
 							============================================= -->
 							<div id="top-cart">
-								<a href="#" id="top-cart-trigger" class="position-relative"><i class="icon-line-bag"></i><span class="top-cart-number">5</span></a>
+								<a href="#" id="top-cart-trigger" class="position-relative"><i class="icon-line-bag"></i><span class="top-cart-number"> @if (Auth::check()) {{ Cart::session(Auth::user()->id)->getTotalQuantity() }} @endif</span></a>
 								<div class="top-cart-content">
 									<div class="top-cart-title">
 										<h4>Shopping Cart</h4>
 									</div>
 									<div class="top-cart-items">
-										<div class="top-cart-item">
+                                        @if(Auth::check())
+                                            @php
+                                            $cartContent = Cart::session(Auth::user()->id)->getContent();
+                                            @endphp
+                                            @foreach ($cartContent as $item)
+                                            <div class="top-cart-item">
+                                                <div class="top-cart-item-image">
+                                                    <a href="#"><img src="{{ $item->associatedModel->cover_image }}" alt="{{ $item->name }}" /></a>
+                                                </div>
+                                                <div class="top-cart-item-desc">
+                                                    <div class="top-cart-item-desc-title">
+                                                        <a href="#" class="font-weight-normal">{{ $item->name }}</a>
+                                                        <span class="top-cart-item-price d-block">${{ $item->price }}</span>
+                                                    </div>
+                                                    <div class="top-cart-item-quantity font-weight-semibold">x {{ $item->quantity }}</div>
+                                                </div>
+                                            </div> 
+                                            @endforeach
+                                        @endif
+                                        
+										{{-- <div class="top-cart-item">
 											<div class="top-cart-item-image">
 												<a href="#"><img src="demos/shop/images/items/featured/5.jpg" alt="Blue Shoulder Bag" /></a>
 											</div>
@@ -128,11 +154,14 @@
 												</div>
 												<div class="top-cart-item-quantity font-weight-semibold">x 2</div>
 											</div>
-										</div>
+										</div> --}}
 									</div>
 									<div class="top-cart-action">
-										<span class="top-checkout-price font-weight-semibold text-dark">$59.98</span>
-										<button class="button button-dark button-small m-0">View Cart</button>
+                                        <span class="top-checkout-price font-weight-semibold text-dark">@if(Auth::check()){{ Cart::session(Auth::user()->id)->getSubTotal() }}@endif</span>
+                                        <form action="{{ url('/checkout') }}">
+                                            <input type="submit" value="Checkout" class="button button-dark button-small m-0">
+                                        </form>
+										{{-- <button class="button button-dark button-small m-0">Checkout</button> --}}
 									</div>
 								</div>
 							</div><!-- #top-cart end -->
@@ -143,8 +172,9 @@
 						</div>
 
 						<!-- Primary Navigation
-						============================================= -->
-						<nav class="primary-menu with-arrows">
+                        ============================================= -->
+                        {{ menu('frontend','menu') }}
+						{{-- <nav class="primary-menu with-arrows">
 
 							<!-- Menu Left -->
 							<ul class="not-dark menu-container">
@@ -268,7 +298,7 @@
 								<li class="menu-item"><a class="menu-link" href="#"><div>Contact</div></a></li>
 							</ul>
 
-						</nav><!-- #primary-menu end -->
+						</nav><!-- #primary-menu end --> --}}
 
 					</div>
 
@@ -361,18 +391,21 @@
 						</div>
 						<div class="card-body mx-auto py-5" style="max-width: 70%;">
 
-							<a href="#" class="button button-large btn-block si-colored si-facebook nott font-weight-normal ls0 center m-0"><i class="icon-facebook-sign"></i> Log in with Facebook</a>
+							<a href="{{url('/login/facebook')}}" class="button button-large btn-block si-colored si-facebook nott font-weight-normal ls0 center m-0"><i class="icon-facebook-sign"></i> Log in with Facebook</a>
 
 							<div class="divider divider-center"><span class="position-relative" style="top: -2px">OR</span></div>
 
-							<form id="login-form" name="login-form" class="mb-0 row" action="#" method="post">
+							<!-- <form id="login-form" name="login-form" class="mb-0 row" action="#" method="post"> -->
+
+                                    {!! Form::open(['url'=>'/login','method'=>'POST','name'=>"login", 'class'=>"mb-0 row"]) !!}
+                        
 
 								<div class="col-12">
-									<input type="text" id="login-form-username" name="login-form-username" value="" class="form-control not-dark" placeholder="Username" />
+									<input type="text" id="login-form-username" name="username" value="" class="form-control not-dark" placeholder="Username" />
 								</div>
 
 								<div class="col-12 mt-4">
-									<input type="password" id="login-form-password" name="login-form-password" value="" class="form-control not-dark" placeholder="Password" />
+									<input type="password" id="login-form-password" name="password" value="" class="form-control not-dark" placeholder="Password" />
 								</div>
 
 								<div class="col-12 text-right">
@@ -385,7 +418,7 @@
 							</form>
 						</div>
 						<div class="card-footer py-4 center">
-							<p class="mb-0">Don't have an account? <a href="#"><u>Sign up</u></a></p>
+							<p class="mb-0">Don't have an account? <a href={{ url("/register") }}><u>Sign up</u></a></p>
 						</div>
 					</div>
 				</div>

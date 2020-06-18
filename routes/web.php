@@ -42,6 +42,9 @@ Route::get('/who', 'HomeController@who');
 Route::get('/auth', 'HomeController@authlogin');
 Route::get('/logout', 'HomeController@authlogout');
 Route::get('/store', 'HomeController@storePage');
+Route::get('/store1', 'HomeController@storePage1');
+Route::get('/addcart/{item}', 'HomeController@addCart');
+Route::get('/checkout', 'HomeController@checkOut');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback');

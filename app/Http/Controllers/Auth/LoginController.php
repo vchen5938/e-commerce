@@ -50,15 +50,15 @@ class LoginController extends Controller
 
     public function redirectTo()
     {
-        if (Auth::user()->role_id == 2) {
-            //假如是一般使用者
-            return '/home';
-        } else if (Auth::user()->role_id == 1) {
-            //假如是管理員
-            return '/home';
-        } else {
-            return '/login';
-        }
+        // if (Auth::user()->role_id == 2) {
+        //     //假如是一般使用者
+        //     return '/home';
+        // } else if (Auth::user()->role_id == 1) {
+        //     //假如是管理員
+        //     return '/home';
+        // } else {
+            return '/store';
+        // }
     }
     protected function loggedOut(Request $request)
     {

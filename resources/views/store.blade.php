@@ -9,7 +9,20 @@
 
 <div class="container-fluid">
     <div class="row mt-2">
-        <div class="col-md-4 mb-5">
+        @foreach ($items as $item)
+            <div class="col-md-4 mb-5">
+                <div class="card cat-card rounded-0 border-0 dark">
+                    <img src="{{ $item->cover_image }}" class="card-img rounded-0" alt="{{ $item->name }}">
+                    <div class="d-flex align-items-start flex-column card-img-overlay bg p-4">
+                        <h3 class="h3 text-white ls--1 font-weight-bold mt-2 mb-auto">{{ $item->price }}</h3> 
+                        <h3 class="h2 text-white ls--1 font-weight-bold mb-4">{{ $item->name }}</h3>
+                        <p>{{ $item->product_description }}</p>
+                        <a href="{{ url('/addcart/' . $item->id) }}" class="button button button-white button-light ml-0">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        {{-- <div class="col-md-4 mb-5">
             <div class="card cat-card rounded-0 border-0 dark">
                 <img src="demos/store/images/cat/outerwear.jpg" class="card-img rounded-0" alt="...">
                 <div class="d-flex align-items-start flex-column card-img-overlay p-4">
@@ -41,7 +54,7 @@
                     <a href="#" class="button button button-white button-light ml-0">Shop Now</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 
